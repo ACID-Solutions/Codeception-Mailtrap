@@ -120,8 +120,9 @@ class Mailtrap extends Module
     public function fetchAttachmentsOfLastMessage()
     {
         $email = $this->fetchLastMessage();
-        $response =
-            $this->client->get("inboxes/{$this->config['inbox_id']}/messages/{$email['id']}/attachments")->getBody();
+        $response = $this->client
+            ->get("inboxes/{$this->config['inbox_id']}/messages/{$email['id']}/attachments")
+            ->getBody();
 
         return json_decode($response, true);
     }
