@@ -2,31 +2,24 @@
 
 namespace Codeception\Module;
 
+use Codeception\Module;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Stream;
 
 /**
  * This module allows you to test emails using Mailtrap <https://mailtrap.io>.
  * Please try it and leave your feedback.
- *
  * ## Project repository
- *
  * <https://github.com/WhatDaFox/Codeception-Mailtrap>
- *
  * ## Status
- *
  * * Maintainer: **Valentin Prugnaud**
  * * Stability: **dev**
  * * Contact: valentin@whatdafox.com
- *
  * ## Config
- *
  * * client_id: `string`, default `` - Your mailtrap API key.
  * * inbox_id: `string`, default `` - The inbox ID to use for the tests
  * * cleanup: `boolean`, default `true` - Clean the inbox after each scenario
- *
  * ## API
- *
  * * client - `GuzzleHttp\Client` Guzzle client for API requests
  */
 class Mailtrap extends Module
@@ -35,17 +28,14 @@ class Mailtrap extends Module
      * @var \GuzzleHttp\Client
      */
     protected $client;
-
     /**
      * @var string
      */
     protected $baseUrl = 'https://mailtrap.io/api/v1/';
-
     /**
      * @var array
      */
     protected $config = ['client_id' => null, 'inbox_id' => null, 'cleanup' => true];
-
     /**
      * @var array
      */
@@ -60,7 +50,7 @@ class Mailtrap extends Module
     {
         $this->client = new Client([
             'base_uri' => $this->baseUrl,
-            'headers' => [
+            'headers'  => [
                 'Api-Token' => $this->config['client_id'],
             ],
         ]);
@@ -130,7 +120,9 @@ class Mailtrap extends Module
     public function fetchAttachmentsOfLastMessage()
     {
         $email = $this->fetchLastMessage();
-        $response = $this->client->get("inboxes/{$this->config['inbox_id']}/messages/{$email['id']}/attachments")->getBody();
+        $response = $this->client
+            ->get("inboxes/{$this->config['inbox_id']}/messages/{$email['id']}/attachments")
+            ->getBody();
 
         return json_decode($response, true);
     }
@@ -284,7 +276,6 @@ class Mailtrap extends Module
     public function fetchLastMessages($number = 1)
     {
         $messages = $this->client->get("inboxes/{$this->config['inbox_id']}/messages")->getBody();
-
         if ($messages instanceof Stream) {
             $messages = $messages->getContents();
         }
@@ -310,7 +301,6 @@ class Mailtrap extends Module
     public function getBccEmailOfMessage($messageId)
     {
         $message = $this->client->get("inboxes/{$this->config['inbox_id']}/messages/$messageId/body.eml")->getBody();
-        
         if ($message instanceof Stream) {
             $message = $message->getContents();
         }
