@@ -102,6 +102,7 @@ class Mailtrap extends Module
     public function fetchLastMessage()
     {
         $messages = $this->client->get("inboxes/{$this->config['inbox_id']}/messages")->getBody();
+
         if ($messages instanceof Stream) {
             $messages = $messages->getContents();
         }
@@ -250,7 +251,6 @@ class Mailtrap extends Module
     public function seeAttachments($count)
     {
         $attachments = $this->fetchAttachmentsOfLastMessage();
-
         $this->assertEquals($count, count($attachments));
     }
 
@@ -262,7 +262,6 @@ class Mailtrap extends Module
     public function seeAnAttachment($bool)
     {
         $attachments = $this->fetchAttachmentsOfLastMessage();
-
         $this->assertEquals($bool, count($attachments) > 0);
     }
 
